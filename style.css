@@ -39,3 +39,27 @@ h1 {
   height: 100%;
   pointer-events: none;
 }
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px 30px;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 12px;
+  color: #333;
+}
+
+.hidden {
+  display: none;
+}
