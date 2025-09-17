@@ -46,7 +46,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
       let values = 0;
       for (let i = 0; i < data.length; i++) values += data[i];
       let average = values / data.length;
-      if (average > 30 && candlesLit.some(l => l)) {
+      if (average > 20 && candlesLit.some(l => l)) {
         // blow out one candle at a time
         for (let i = 0; i < candlesLit.length; i++) {
           if (candlesLit[i]) {
