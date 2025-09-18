@@ -23,7 +23,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-.canvas {
+canvas {
   display: block;
   margin: 0 auto;
 }
