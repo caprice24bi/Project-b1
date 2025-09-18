@@ -66,3 +66,9 @@ navigator.mediaDevices.getUserMedia({ audio: true })
   .catch(function(err) {
     console.log("Mic not allowed", err);
   });
+if (!candlesLit.some(l => l)) {
+      launchConfetti();
+      document.getElementById("popup").classList.remove("hidden");
+    }
+  }
+});
