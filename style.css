@@ -39,6 +39,7 @@ h1 {
   height: 100%;
   pointer-events: none;
 }
+
 .popup {
   position: fixed;
   top: 0;
@@ -52,7 +53,7 @@ h1 {
 }
 
 .popup-content {
-  background: white;
+  background: transparent white;
   padding: 20px 30px;
   font-size: 24px;
   font-weight: bold;
@@ -62,4 +63,4 @@ h1 {
 
 .hidden {
   display: none;
-}
+    }
