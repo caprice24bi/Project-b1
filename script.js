@@ -5,7 +5,7 @@ canvas.height = 400;
 
 let candlesLit = [true, true, true, true, true];
 
-function drawCake() {
+function drawcake() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // cake base
