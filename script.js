@@ -66,32 +66,3 @@ navigator.mediaDevices.getUserMedia({ audio: true })
   .catch(function(err) {
     console.log("Mic not allowed", err);
   });
-if (!candlesLit.some(l => l)) {
-          launchConfetti();
-          document.getElementById("popup").classList.remove("hidden");
-        }
-      }
-      requestAnimationFrame(detectBlow);
-    }
-    detectBlow();
-  })
-  .catch(function(err) {
-    console.log("Mic not allowed", err);
-  });
-
-// fallback klik
-canvas.addEventListener("click", () => {
-  if (candlesLit.some(l => l)) {
-    for (let i = 0; i < candlesLit.length; i++) {
-      if (candlesLit[i]) {
-        candlesLit[i] = false;
-        break;
-      }
-    }
-    drawCake();
-if (!candlesLit.some(l => l)) {
-      launchConfetti();
-      document.getElementById("popup").classList.remove("hidden");
-    }
-  }
-});
