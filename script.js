@@ -30,7 +30,7 @@ function drawcake() {
   }
 }
 
-drawCake();
+drawcake();
 
 // microphone input
 navigator.mediaDevices.getUserMedia({ audio: true })
@@ -54,7 +54,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
             break;
           }
         }
-        drawCake();
+        drawcake();
         if (!candlesLit.some(l => l)) {
           launchConfetti();
         }
@@ -84,7 +84,7 @@ canvas.addEventListener("click", () => {
         break;
       }
     }
-    drawCake();
+    drawcake();
 
     if (!candlesLit.some(l => l)) {
       launchConfetti();
