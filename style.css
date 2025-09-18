@@ -26,8 +26,8 @@ h1 {
 canvas {
   display: block;
   margin: 0 auto;
+  border: 1px solid black; 
 }
-
 .confetti {
   position: fixed;
   top: 0;
