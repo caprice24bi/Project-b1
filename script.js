@@ -5,32 +5,33 @@ canvas.height = 400;
 
 let candlesLit = [true, true, true, true, true];
 
-function drawcake() {
+function drawCake() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // cake base
-  ctx.fillStyle = "#ffcccb";
+  // kue dasar
+  ctx.fillStyle = "#d2691e";
   ctx.fillRect(100, 250, 200, 100);
-  ctx.fillStyle = "#ffe4b5";
-  ctx.fillRect(100, 220, 200, 40);
+  ctx.fillStyle = "#8b4513";
+  ctx.fillRect(100, 230, 200, 20);
 
-  // candles
-  const startX = 120;
-  for (let i = 0; i < 5; i++) {
-    const x = startX + i * 40;
+  // lilin
+  const spacing = 200 / (candlesLit.length + 1);
+  for (let i = 0; i < candlesLit.length; i++) {
+    const x = 100 + spacing * (i + 1);
+    const y = 190;
+
     ctx.fillStyle = "#87cefa";
-    ctx.fillRect(x, 180, 20, 40);
+    ctx.fillRect(x - 5, y, 10, 40);
 
     if (candlesLit[i]) {
       ctx.beginPath();
-      ctx.ellipse(x+10, 170, 8, 16, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y - 10, 6, 12, 0, 0, Math.PI * 2);
       ctx.fillStyle = "orange";
       ctx.fill();
     }
   }
 }
-
-drawcake();
+drawCake();
 
 // microphone input
 navigator.mediaDevices.getUserMedia({ audio: true })
