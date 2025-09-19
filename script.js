@@ -8,6 +8,11 @@ const confettiCtx = confettiCanvas.getContext("2d");
 confettiCanvas.width = window.innerWidth;
 confettiCanvas.height = window.innerHeight;
 
+const balloonsCanvas = document.getElementById("balloons");
+const balloonsCtx = balloonsCanvas.getContext("2d");
+balloonsCanvas.width = window.innerWidth;
+balloonsCanvas.height = window.innerHeight;
+
 let candlesLit = [true, true, true, true, true];
 let confettiPieces = [];
 
@@ -158,17 +163,17 @@ function launchBalloons() {
 function drawBalloons() {
   for (let i = 0; i < balloons.length; i++) {
     let b = balloons[i];
-    confettiCtx.beginPath();
-    confettiCtx.ellipse(b.x, b.y, b.size * 0.6, b.size, 0, 0, Math.PI * 2);
-    confettiCtx.fillStyle = b.color;
-    confettiCtx.fill();
+    balloonsCtx.beginPath();
+    balloonsCtx.ellipse(b.x, b.y, b.size * 0.6, b.size, 0, 0, Math.PI * 2);
+    balloonsCtx.fillStyle = b.color;
+    balloonsCtx.fill();
 
     // tali balon
-    confettiCtx.beginPath();
-    confettiCtx.moveTo(b.x, b.y + b.size);
-    confettiCtx.lineTo(b.x, b.y + b.size + 40);
-    confettiCtx.strokeStyle = "#555";
-    confettiCtx.stroke();
+    balloonsCtx.beginPath();
+    balloonsCtx.moveTo(b.x, b.y + b.size);
+    balloonsCtx.lineTo(b.x, b.y + b.size + 40);
+    balloonsCtx.strokeStyle = "#555";
+    balloonsCtx.stroke();
 
     // gerakan
     b.y -= b.speedY;
