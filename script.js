@@ -132,38 +132,57 @@ function drawConfetti() {
 }
 drawConfetti();
 
-// ===== BALON =====
-const balloonCanvas = document.getElementById("balloons");
-const balloonCtx = balloonCanvas.getContext("2d");
-balloonCanvas.width = window.innerWidth;
-balloonCanvas.height = window.innerHeight;
+// ==== BALON ====
+function Balloon(x, y, color) {
+  this.x = x;
+  this.y = y;
+  this.color = color;
+  this.size = Math.random() * 30 + 20;
+  this.speedY = Math.random() * 1 + 0.5;
+  this.swing = Math.random() * 0.05 + 0.02;
+  this.angle = Math.random() * Math.PI * 2;
+}
+
 let balloons = [];
 
-class Balloon{
-  constructor(){
-    this.x=Math.random()*balloonCanvas.width;
-    this.y=balloonCanvas.height+50;
-    this.size=Math.random()*20+20;
-    this.color=["#ff7675","#74b9ff","#ffeaa7","#55efc4","#fd79a8"][Math.floor(Math.random()*5)];
-    this.speedY=Math.random()*1.5 +0.5;
-    this.sway=Math.random()*2 -1;
-  }
-  draw(){
-    balloonCtx.beginPath();
-    balloonCtx.ellipse(this.x,this.y,this.size/2,this.size,0,0,Math.PI*2);
-    balloonCtx.fillStyle=this.color;
-    balloonCtx.fill();
-    balloonCtx.strokeStyle="#333";
-    balloonCtx.stroke();
-  }
-  update(){
-    this.y-=this.speedY;
-    this.x+=Math.sin(this.y/50)*this.sway;
+function launchBalloons() {
+  for (let i = 0; i < 15; i++) {
+    let x = Math.random() * confettiCanvas.width;
+    let y = confettiCanvas.height + 50;
+    let colors = ["#ff7675", "#74b9ff", "#55efc4", "#ffeaa7", "#fd79a8"];
+    let color = colors[Math.floor(Math.random() * colors.length)];
+    balloons.push(new Balloon(x, y, color));
   }
 }
 
-function launchBalloons(count=10){
-  for(let i=0
+function drawBalloons() {
+  for (let i = 0; i < balloons.length; i++) {
+    let b = balloons[i];
+    confettiCtx.beginPath();
+    confettiCtx.ellipse(b.x, b.y, b.size * 0.6, b.size, 0, 0, Math.PI * 2);
+    confettiCtx.fillStyle = b.color;
+    confettiCtx.fill();
+
+    // tali balon
+    confettiCtx.beginPath();
+    confettiCtx.moveTo(b.x, b.y + b.size);
+    confettiCtx.lineTo(b.x, b.y + b.size + 40);
+    confettiCtx.strokeStyle = "#555";
+    confettiCtx.stroke();
+
+    // gerakan
+    b.y -= b.speedY;
+    b.angle += b.swing;
+    b.x += Math.sin(b.angle) * 0.5;
+
+    if (b.y + b.size < 0) {
+      balloons.splice(i, 1);
+      i--;
+    }
+  }
+  requestAnimationFrame(drawBalloons);
+}
+drawBalloons();
       
 // mic blow
 navigator.mediaDevices.getUserMedia({ audio: true })
@@ -190,8 +209,14 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         drawCake();
 
         if (!candlesLit.some(l => l)) {
-          launchConfetti();
-          document.getElementById("popup").classList.remove("hidden");
+  launchConfetti();
+  launchBalloons();
+  document.getElementById("popup").classList.remove("hidden");
+  
+  // play sound
+  const cheer = document.getElementById("cheerSound");
+  cheer.play();
+}
         }
       }
       requestAnimationFrame(detectBlow);
@@ -211,9 +236,14 @@ canvas.addEventListener("click", () => {
     }
     drawCake();
 
-    if (!candlesLit.some(l => l)) {
-      launchConfetti();
-      document.getElementById("popup").classList.remove("hidden");
-    }
+   if (!candlesLit.some(l => l)) {
+  launchConfetti();
+  launchBalloons();
+  document.getElementById("popup").classList.remove("hidden");
+  
+  // play sound
+  const cheer = document.getElementById("cheerSound");
+  cheer.play();
+}
   }
 });
