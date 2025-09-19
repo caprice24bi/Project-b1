@@ -20,13 +20,19 @@ h1 {
   color: #555;
 }
 
-#canvas, #confetti, #balloons {
-  display: block;
-  max-width: 100%;
+#canvas {
+  position: relative; 
+  z-index: 2;
+}
+
+#confetti, #balloons {
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+  z-index: 1;
 }
 
 #confetti, #balloons {
@@ -62,26 +68,6 @@ h1 {
   animation: scaleUp 0.5s ease-out;
 }
 
-.banner {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: clamp(20px, 4vw, 40px);
-  font-weight: bold;
-  color: #ff7675;
-  background: rgba(255,255,255,0.8);
-  padding: 10px 20px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  animation: slideDown 0.7s ease-out forwards;
-}
-
 .hidden {
   display: none;
 }
-
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes scaleUp { from {transform:scale(0.8);} to {transform:scale(1);} }
-@keyframes slideDown { from {transform: translate(-50%, -50px); opacity:0;} to {transform: translate(-50%, 0); opacity:1;} }
