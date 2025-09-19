@@ -1,35 +1,26 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Birthday Surprise</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- SweetAlert2 untuk popup -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>met ultah sayang</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Don't forget to make a wish ❤️</h1>
-    <p class="instruction">Tiup lilinnya lewat mic atau klik lilinnya 😘🎂</p>
+  <h1>Make a wish ❤️</h1>
+  <p class="instruction">Tiup lilinnya lewat mic ya 😘🎂 </p>
 
-    <!-- canvas untuk cake (beri width/height langsung supaya proporsinya pasti) -->
-    <canvas id="cake" width="400" height="400"></canvas>
+  <canvas id="canvas"></canvas>
+  <canvas id="confetti"></canvas>
+  <canvas id="balloons"></canvas> 
 
-    <!-- canvas untuk confetti (full screen) -->
-    <canvas id="confetti"></canvas>
-
-    <!-- popup (hidden, akan muncul ketika semua lilin padam) -->
-    <div id="popup" class="popup hidden">
-      <div class="popup-content">
-        🎉 Selamat Ulang Tahun yang ke-34 Sayang 🎉
-      </div>
+  <div id="popup" class="popup hidden">
+    <div class="popup-content">
+      🎉 Selamat Ulang Tahun Sayang 🎉
+      ~nisa
     </div>
   </div>
-
-  <!-- scripts: confetti dulu (ada fungsi launchConfetti), lalu utama -->
-  <script src="confetti.js" defer></script>
-  <script src="script.js" defer></script>
+  
+  <script src="script.js"></script>
 </body>
 </html>
-
