@@ -1,178 +1,219 @@
-// script.js
-// gambar cake biru pastel + lilin goyang + mic + klik fallback + popup SweetAlert2
-
-const canvas = document.getElementById("cake");
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-// canvas width/height sudah di-attribute HTML (400x400)
+canvas.width = 400;
+canvas.height = 400; // bisa disesuaikan
 
-// konfigurasi lilin
-let candlesCount = 5;
-let candlesLit = new Array(candlesCount).fill(true);
-let phases = [];
-for (let i = 0; i < candlesCount; i++) phases.push(Math.random() * Math.PI * 2);
+const confettiCanvas = document.getElementById("confetti");
+const confettiCtx = confettiCanvas.getContext("2d");
+confettiCanvas.width = window.innerWidth;
+confettiCanvas.height = window.innerHeight;
 
-// waktu animasi
-let t = 0;
+let candlesLit = [true, true, true, true, true];
+let confettiPieces = [];
 
-// gambar kue biru pastel
+// draw cake 3 layer lebih lebar + lilin di layer atas
 function drawCake() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // shadow/plate
-  ctx.fillStyle = "rgba(40,80,120,0.06)";
-  ctx.fillRect(80, 330, 240, 10);
+  // tinggi layer
+  const bottomHeight = 60;
+  const middleHeight = 50;
+  const topHeight = 50;
 
-  // badan kue - biru pastel
-  ctx.fillStyle = "#bfe9ff"; // biru pastel
-  roundRect(ctx, 100, 250, 200, 100, 12, true, false);
+  // lebar layer
+  const bottomWidth = 260;
+  const middleWidth = 220;
+  const topWidth = 200;
 
-  // lapisan atas (sedikit lebih gelap)
-  ctx.fillStyle = "#9fd8ff";
-  roundRect(ctx, 100, 230, 200, 24, 8, true, false);
+  // posisi X layer
+  const bottomX = (canvas.width - bottomWidth) / 2;
+  const middleX = (canvas.width - middleWidth) / 2;
+  const topX = (canvas.width - topWidth) / 2;
 
-  // hiasan sprinkles (opsional)
-  drawSprinkles();
+  // posisi Y layer
+  const bottomY = 260;
+  const middleY = bottomY - middleHeight;
+  const topY = middleY - topHeight;
 
-  // gambar lilin dengan goyang (swing) - tiap lilin punya fase sendiri
-  const spacing = 200 / (candlesCount + 1);
-  for (let i = 0; i < candlesCount; i++) {
-    const x = 100 + spacing * (i + 1);
-    const y = 220; // titik atas batang lilin reference
+  // layer bawah
+  ctx.fillStyle = "#f4a7b9";
+  ctx.fillRect(bottomX, bottomY, bottomWidth, bottomHeight);
 
-    // sudut goyang (rad)
-    const amplitude = 0.25; // ~14 derajat
-    const speed = 0.025;
-    const angle = candlesLit[i] ? Math.sin(t * speed + phases[i]) * amplitude : 0;
+  // layer tengah
+  ctx.fillStyle = "#c8e6f8";
+  ctx.fillRect(middleX, middleY, middleWidth, middleHeight);
 
-    // gambar batang lilin dengan rotasi sederhana
-    ctx.save();
-    ctx.translate(x, y + 20); // pivot di dasar batang (sedikit di bawah)
-    ctx.rotate(angle);
-    // batang lilin lembut biru
-    ctx.fillStyle = "#a7d8f7";
-    ctx.fillRect(-5, -40, 10, 40);
+  // layer atas
+  ctx.fillStyle = "#d9f8c8";
+  ctx.fillRect(topX, topY, topWidth, topHeight);
 
-    // sumbu smoke / ring: bila sudah padam, beri sedikit efek abu-abu (opsional)
+  // lilin
+  const candleCount = candlesLit.length;
+  const spacing = topWidth / (candleCount + 1);
+
+  for (let i = 0; i < candleCount; i++) {
+    const x = topX + spacing * (i + 1);
+    const y = topY - 30; // batang lilin di atas layer atas
+
+    // batang lilin
+    ctx.fillStyle = "#87cefa";
+    ctx.fillRect(x - 5, y, 10, 40);
+
     if (candlesLit[i]) {
-      // api
+      const flickerX = (Math.random() - 0.5) * 4;
+      const flickerY = (Math.random() - 0.5) * 2;
+      const flameHeight = 12 + Math.random() * 2;
+
       ctx.beginPath();
-      ctx.ellipse(0, -48, 6, 12, 0, 0, Math.PI * 2);
-      ctx.fillStyle = "#ffd27f";
+      ctx.ellipse(
+        x + flickerX,
+        y - 10 + flickerY,
+        6,
+        flameHeight,
+        0,
+        0,
+        Math.PI * 2
+      );
+      ctx.fillStyle = "orange";
       ctx.fill();
 
-      // inner flicker
-      ctx.beginPath();
-      ctx.ellipse(0, -50, 3, 6, 0, 0, Math.PI * 2);
-      ctx.fillStyle = "#fff2c7";
+      ctx.shadowColor = "yellow";
+      ctx.shadowBlur = 15;
       ctx.fill();
-    } else {
-      // kalau padam, bisa tambahkan sedikit asap halus (circle grey)
-      ctx.beginPath();
-      ctx.fillStyle = "rgba(120,120,120,0.12)";
-      ctx.arc(0, -46, 5, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.shadowBlur = 0;
     }
-
-    ctx.restore();
   }
 }
 
-// helper buat rounded rect
-function roundRect(ctx, x, y, w, h, r, fill, stroke) {
-  if (typeof r === "undefined") r = 5;
-  if (typeof fill === "undefined") fill = true;
-  if (typeof stroke === "undefined") stroke = false;
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-  if (fill) ctx.fill();
-  if (stroke) ctx.stroke();
-}
-
-// sprinkle kecil acak di atas kue
-function drawSprinkles() {
-  const colors = ["#ff9ac2", "#ffd07f", "#a3ddff", "#c7f7d8"];
-  for (let i = 0; i < 18; i++) {
-    const px = 115 + Math.random() * 170;
-    const py = 240 + Math.random() * 20;
-    ctx.fillStyle = colors[i % colors.length];
-    ctx.fillRect(px, py, 6, 2);
-  }
-}
-
-// animasi loop
 function animate() {
-  t++;
   drawCake();
   requestAnimationFrame(animate);
 }
+
 animate();
 
-// fungsi untuk tiup/ padam 1 lilin (satu per aksi)
-function blowOneCandle() {
-  for (let i = 0; i < candlesLit.length; i++) {
-    if (candlesLit[i]) {
-      candlesLit[i] = false;
-      break;
+// confetti
+function ConfettiPiece(x, y, color) {
+  this.x = x;
+  this.y = y;
+  this.color = color;
+  this.size = Math.random() * 6 + 4;
+  this.speedY = Math.random() * 3 + 2;
+  this.speedX = (Math.random() - 0.5) * 2;
+}
+
+function launchConfetti() {
+  for (let i = 0; i < 150; i++) {
+    let x = Math.random() * confettiCanvas.width;
+    let y = -10;
+    let colors = ["#ff7675", "#74b9ff", "#ffeaa7", "#55efc4", "#fd79a8"];
+    let color = colors[Math.floor(Math.random() * colors.length)];
+    confettiPieces.push(new ConfettiPiece(x, y, color));
+  }
+}
+
+function drawConfetti() {
+  confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+  for (let i = 0; i < confettiPieces.length; i++) {
+    let p = confettiPieces[i];
+    confettiCtx.fillStyle = p.color;
+    confettiCtx.beginPath();
+    confettiCtx.arc(p.x, p.y, p.size, 0, 2 * Math.PI);
+    confettiCtx.fill();
+    p.y += p.speedY;
+    p.x += p.speedX;
+
+    if (p.y > confettiCanvas.height) {
+      confettiPieces.splice(i, 1);
+      i--;
     }
   }
-  // cek semua padam
-  if (!candlesLit.some(Boolean)) {
-    // jeda singkat biar animasi confetti sinkron
-    setTimeout(() => {
-      if (typeof launchConfetti === "function") launchConfetti();
-      // tampilkan popup SweetAlert yg lebih cantik
-      Swal.fire({
-        title: '🎉 Selamat Ulang Tahun yang ke-34 Sayang 🎂',
-        text: 'Semoga harimu penuh cinta & kebahagiaan 💖',
-        icon: 'success',
-        confirmButtonText: 'Terima kasih 💕'
-      });
-      // juga tunjukkan overlay popup HTML (opsional)
-      const popup = document.getElementById("popup");
-      if (popup) popup.classList.remove("hidden");
-    }, 250);
+  requestAnimationFrame(drawConfetti);
+}
+drawConfetti();
+
+// ===== BALON =====
+const balloonCanvas = document.getElementById("balloons");
+const balloonCtx = balloonCanvas.getContext("2d");
+balloonCanvas.width = window.innerWidth;
+balloonCanvas.height = window.innerHeight;
+let balloons = [];
+
+class Balloon{
+  constructor(){
+    this.x=Math.random()*balloonCanvas.width;
+    this.y=balloonCanvas.height+50;
+    this.size=Math.random()*20+20;
+    this.color=["#ff7675","#74b9ff","#ffeaa7","#55efc4","#fd79a8"][Math.floor(Math.random()*5)];
+    this.speedY=Math.random()*1.5 +0.5;
+    this.sway=Math.random()*2 -1;
+  }
+  draw(){
+    balloonCtx.beginPath();
+    balloonCtx.ellipse(this.x,this.y,this.size/2,this.size,0,0,Math.PI*2);
+    balloonCtx.fillStyle=this.color;
+    balloonCtx.fill();
+    balloonCtx.strokeStyle="#333";
+    balloonCtx.stroke();
+  }
+  update(){
+    this.y-=this.speedY;
+    this.x+=Math.sin(this.y/50)*this.sway;
   }
 }
 
-// klik fallback: padamkan satu lilin per klik
-canvas.addEventListener("click", () => {
-  if (candlesLit.some(l => l)) blowOneCandle();
-});
+function launchBalloons(count=10){
+  for(let i=0
+      
+// mic blow
+navigator.mediaDevices.getUserMedia({ audio: true })
+  .then(stream => {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioContext.createAnalyser();
+    const mic = audioContext.createMediaStreamSource(stream);
+    mic.connect(analyser);
+    const data = new Uint8Array(analyser.frequencyBinCount);
 
-// --- mic detection (super sensitif) ---
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const analyser = audioContext.createAnalyser();
-      analyser.smoothingTimeConstant = 0.8;
-      analyser.fftSize = 1024;
-      const source = audioContext.createMediaStreamSource(stream);
-      source.connect(analyser);
-      const data = new Uint8Array(analyser.frequencyBinCount);
+    function detectBlow() {
+      analyser.getByteFrequencyData(data);
+      let values = 0;
+      for (let i = 0; i < data.length; i++) values += data[i];
+      let average = values / data.length;
 
-      function detectBlow() {
-        analyser.getByteFrequencyData(data);
-        let values = 0;
-        for (let i = 0; i < data.length; i++) values += data[i];
-        let average = values / data.length;
-        // threshold sangat sensitif supaya napas kecil/tiupan terdeteksi
-        if (average > 6 && candlesLit.some(l => l)) {
-          blowOneCandle();
+      if (average > 30 && candlesLit.some(l => l)) {
+        for (let i = 0; i < candlesLit.length; i++) {
+          if (candlesLit[i]) {
+            candlesLit[i] = false;
+            break;
+          }
         }
-        requestAnimationFrame(detectBlow);
-      }
-      detectBlow();
-    })
-    .catch(err => {
-      console.log("Mic tidak tersedia/diizinkan — fallback ke klik.", err);
-    });
-} else {
-  console.log("Browser tidak mendukung getUserMedia.");
-}
+        drawCake();
 
+        if (!candlesLit.some(l => l)) {
+          launchConfetti();
+          document.getElementById("popup").classList.remove("hidden");
+        }
+      }
+      requestAnimationFrame(detectBlow);
+    }
+    detectBlow();
+  })
+  .catch(err => console.log("Mic not allowed", err));
+
+// fallback klik
+canvas.addEventListener("click", () => {
+  if (candlesLit.some(l => l)) {
+    for (let i = 0; i < candlesLit.length; i++) {
+      if (candlesLit[i]) {
+        candlesLit[i] = false;
+        break;
+      }
+    }
+    drawCake();
+
+    if (!candlesLit.some(l => l)) {
+      launchConfetti();
+      document.getElementById("popup").classList.remove("hidden");
+    }
+  }
+});
